@@ -11,6 +11,7 @@ function load(file) {
 }
 const {defaultLayout,validateLayout,useHouse}=load('src/store.ts');
 const {landing,doors,furniture,roomParts,roomArea,overlapArea,plumbingDrop,serviceCore,upperWalls}=load('src/planning.ts');
+const {groundFurniture,groundDoors}=load('src/groundPlanning.ts');
 const {lowerSteps,upperSteps,middleLanding,topLanding}=load('src/stairGeometry.ts');
 const rooms=defaultLayout.rooms.filter(r=>r.floor===1);
 const room=id=>defaultLayout.rooms.find(r=>r.id===id);
@@ -27,6 +28,17 @@ for(const f of furniture){
   // Exact rectangle intersection sum checks furniture containment in irregular room footprints.
   near(overlapArea({...f,id:'fixture'},owner),f.w*f.d);
 }
+for(const f of groundFurniture){
+  const owner=room(f.room);
+  assert(owner&&owner.floor===0,`Ground furniture ${f.id} must reference a ground-floor room`);
+  assert(inside({x:f.x-f.w/2,z:f.z-f.d/2},owner)&&inside({x:f.x+f.w/2,z:f.z+f.d/2},owner),
+    `Ground furniture ${f.id} must remain inside ${f.room}`);
+}
+const workEntry=groundDoors.find(d=>d.id==='g-work-door');
+near(workEntry.x,-1.798);
+assert(workEntry.z<-4.092,'Work-area doorway must enter from the kitchen, not the hall');
+const sitoutEntry=groundDoors.find(d=>d.id==='g-main-entry');
+assert(sitoutEntry.x<-1,'Sit-out entry must remain at the left corner');
 near(roomArea(room('bed1')),12.9456);
 near(roomArea(room('closet')),3.596);
 near(roomArea(room('masterbath')),3.596);
@@ -63,4 +75,4 @@ const migrated=load('src/store.ts').useHouse.getState().layout;
 assert.equal(migrated.rooms.find(r=>r.id==='bed1').color,'#123456');
 assert.equal(migrated.rooms.find(r=>r.id==='bed1').x,room('bed1').x);
 assert(storage.has('mangalam-review-v9'),'Prior saved layout must remain available');
-console.log('PASS: net room areas/non-overlap, furniture containment, bathroom alignment, door connectivity, stair connections, fixed geometry, imports and finish migration.');
+console.log('PASS: room areas/non-overlap, furniture containment, ground entries, bathroom alignment, door/stair connectivity, fixed geometry, imports and finish migration.');

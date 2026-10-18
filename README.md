@@ -1,4 +1,4 @@
-# My Home 3D Studio — Review V4.7
+# My Home 3D Studio — Review V4.8
 
 A starter **React + Vite + TypeScript + React Three Fiber + Three.js + Drei + Zustand + Tailwind** app for planning a Kerala first-floor extension.
 

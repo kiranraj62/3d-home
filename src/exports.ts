@@ -40,7 +40,7 @@ export async function downloadPdf(data: string, title: string) {
   offsets[4]=size;push(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${image.width} /Height ${image.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);push(jpeg);push('\nendstream\nendobj\n');
   const scale=Math.min(523/image.width,640/image.height),w=image.width*scale,h=image.height*scale;
   const safeTitle=title.replace(/[^a-zA-Z0-9 .-]/g,'');
-  const stream=`BT /F1 22 Tf 36 800 Td (Mangalam House) Tj /F1 11 Tf 0 -22 Td (${safeTitle} - V4.7) Tj ET\nq ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${((595-w)/2).toFixed(2)} ${(110+(640-h)/2).toFixed(2)} cm /Image Do Q\nBT /F1 9 Tf 36 65 Td (Concept proposal. Traditional lower roofs retained.) Tj 0 -15 Td (Modern upper frame, glass balcony and enclosed stair tower under one concrete roof.) Tj ET`;
+  const stream=`BT /F1 22 Tf 36 800 Td (Mangalam House) Tj /F1 11 Tf 0 -22 Td (${safeTitle} - V4.8) Tj ET\nq ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${((595-w)/2).toFixed(2)} ${(110+(640-h)/2).toFixed(2)} cm /Image Do Q\nBT /F1 9 Tf 36 65 Td (Concept proposal. Traditional lower roofs retained.) Tj 0 -15 Td (Modern upper frame, glass balcony and enclosed stair tower under one concrete roof.) Tj ET`;
   object(5,`<< /Length ${encoder.encode(stream).length} >>\nstream\n${stream}\nendstream`);
   object(6,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
   const start=size;push('xref\n0 7\n0000000000 65535 f \n');offsets.slice(1).forEach(n=>push(`${String(n).padStart(10,'0')} 00000 n \n`));push(`trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n${start}\n%%EOF`);

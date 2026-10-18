@@ -6,6 +6,10 @@ import { lowerSteps, upperSteps, middleLanding } from './stairGeometry';
 
 const px = (n: number) => 300 + n * 42;
 const pz = (n: number) => 320 + n * 42;
+const compactLabels: Record<string, string[]> = {
+  closet: ['Walk-in', 'Closet'],
+  masterbath: ['Attached', 'Bath'],
+};
 
 export function UpperPlan() {
   const {layout, setSelected, selected} = useHouse();
@@ -39,9 +43,15 @@ export function UpperPlan() {
     </g>}
     {layout.rooms.filter(r=>r.floor===1&&r.id!=='stairs').map(r=>{
       const [x,z]=roomLabels[r.id] || [r.x,r.z];
+      const lines=compactLabels[r.id] || [r.name];
+      const compact=lines.length>1;
+      const titleY=pz(z)-(compact?4:0);
       return <g key={r.id} pointerEvents="none">
-        <text x={px(x)} y={pz(z)} textAnchor="middle" fontSize={12} fontWeight="700">{r.name}</text>
-        <text x={px(x)} y={pz(z)+12} textAnchor="middle" fontSize="9">{roomArea(r).toFixed(1)} m²</text>
+        {compact&&<rect x={px(x)-30} y={pz(z)-20} width="60" height="42" rx="4" fill="#ffffff" fillOpacity=".78" stroke="#d5dfdd" strokeWidth=".7"/>}
+        <text x={px(x)} y={titleY} textAnchor="middle" fontSize={compact?9.5:11.5} fontWeight="700" fill="#17242a" paintOrder="stroke" stroke="#f7faf9" strokeWidth="3" strokeLinejoin="round">
+          {lines.map((line,index)=><tspan key={line} x={px(x)} dy={index===0?0:10}>{line}</tspan>)}
+        </text>
+        <text x={px(x)} y={pz(z)+(compact?16:12)} textAnchor="middle" fontSize={compact?8.2:9} fontWeight="600" fill="#42535a" paintOrder="stroke" stroke="#f7faf9" strokeWidth="2.5">{roomArea(r).toFixed(1)} m²</text>
       </g>;
     })}
     {doors.map(d=><g key={d.id} pointerEvents="none" transform={`translate(${px(d.x)},${pz(d.z)}) rotate(${d.axis==='z'?90:0})`}>

@@ -32,7 +32,7 @@ export const defaultLayout: Layout = {
     { id: 'g-porch', name: 'Car Porch', x: 4.176, z: 3.41, w: 2.552, d: 4.836, color: '#C6C9CE', floor: 0, notes: 'Front-right covered car porch' },
     { id: 'g-sitout', name: 'Sit-out', x: 0.58, z: 4.96, w: 4.64, d: 1.736, color: '#E9CE9E', floor: 0, notes: 'Front verandah / sit-out' },
 
-    // First floor V4.7: central family hall, retained rear blank strip, and an additional large front free area
+    // First floor V4.8: central family hall, retained rear blank strip, and an additional large front free area
     { id: 'bed1', name: 'Master Bedroom', x: -3.538, z: -1.0, w: 3.596, d: 3.6, color: '#8db5ad', floor: 1, notes: '12.9 m² expanded master bedroom with king bed tucked in the bottom-left corner.' },
     { id: 'closet', name: 'Walk-in Closet', x: -4.437, z: -3.8, w: 1.798, d: 2.0, color: '#c4b5a5', floor: 1, notes: '3.6 m² walk-in closet on the rear-left of the master suite.' },
     { id: 'masterbath', name: 'Attached Bath', x: -2.639, z: -3.8, w: 1.798, d: 2.0, color: '#a3c4d2', floor: 1, notes: '3.6 m² attached ensuite bathroom on the rear-right of the master suite.' },
@@ -73,7 +73,7 @@ export function validateLayout(value: unknown): Layout {
     if (matches.length !== 1) throw new Error('Missing or duplicate room.');
     const r = matches[0];
     if (['x','z','w','d','floor'].some(k => r[k as keyof Room] !== base[k as keyof Room]))
-      throw new Error('This layout changes fixed geometry. Use a V4.7 export.');
+      throw new Error('This layout changes fixed geometry. Use a V4.8 export.');
     if (!/^#[0-9a-f]{6}$/i.test(r.color)) throw new Error('Invalid finish colour.');
     return {...base, color: base.floor === 0 || base.id === 'stairs' ? base.color : r.color};
   });

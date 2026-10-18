@@ -17,18 +17,15 @@ import {
 import House3D, { type ViewPreset } from './House3D';
 import { useHouse, type Layout } from './store';
 import { UpperPlan } from './UpperFloor';
+import { GroundPlan } from './GroundFloor';
 import { roomArea, overlapArea } from './planning';
-import { lowerSteps, upperSteps, middleLanding, topLanding, stairRoute } from './stairGeometry';
 import { captureView, downloadImage, downloadPdf } from './exports';
 
 function Plan2D({ activeFloor, setFloor }: { activeFloor: 0 | 1; setFloor: (f: 0 | 1) => void }) {
-  const { layout, selected, setSelected } = useHouse();
-  const rooms = layout.rooms.filter((r) => r.floor === activeFloor);
-
   return (
     <div className="plan">
       <div className="plan-label" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        <span>{activeFloor === 0 ? 'EXISTING GROUND FLOOR' : 'PROPOSED FIRST FLOOR · V4.7'}</span>
+        <span>{activeFloor === 0 ? 'EXISTING GROUND FLOOR · V4.8' : 'PROPOSED FIRST FLOOR · V4.8'}</span>
         <div style={{ display: 'inline-flex', gap: '4px' }}>
           <button
             style={{
@@ -60,90 +57,9 @@ function Plan2D({ activeFloor, setFloor }: { activeFloor: 0 | 1; setFloor: (f: 0
           </button>
         </div>
       </div>
-      <svg viewBox={activeFloor===1?'40 55 520 530':'0 0 600 650'} role="group" aria-label="Top down conceptual room arrangement">
+      <svg viewBox="40 55 520 530" role="group" aria-label="Top down conceptual room arrangement">
         {activeFloor === 1 && <UpperPlan />}
-        {activeFloor === 0 && rooms.map((r) => {
-          const isSelected = selected === r.id;
-          const x = 300 + (r.x - r.w / 2) * 42;
-          const y = 320 + (r.z - r.d / 2) * 42;
-          const width = r.w * 42;
-          const height = r.d * 42;
-          const centerX = 300 + r.x * 42;
-          const centerY = 320 + r.z * 42;
-
-          return (
-            <g key={r.id} onClick={() => setSelected(r.id)} style={{ cursor: 'pointer' }}>
-              <rect
-                x={x}
-                y={y}
-                width={width}
-                height={height}
-                rx="4"
-                fill={isSelected ? '#fde047' : r.color}
-                stroke={isSelected ? '#2563eb' : '#42535a'}
-                strokeWidth={isSelected ? '3' : '2'}
-              />
-              <text
-                x={centerX}
-                y={height > 35 ? centerY - 5 : centerY}
-                textAnchor="middle"
-                fontSize="11"
-                fontWeight="700"
-                fill="#1e293b"
-              >
-                {r.name.length > 18 ? r.name.slice(0, 17) + '…' : r.name}
-              </text>
-              {height > 35 && (
-                <text
-                  x={centerX}
-                  y={centerY + 10}
-                  textAnchor="middle"
-                  fontSize="9"
-                  fontWeight="600"
-                  fill="#475569"
-                >
-                  {r.w.toFixed(1)} × {r.d.toFixed(1)}m
-                </text>
-              )}
-            </g>
-          );
-        })}
-
-        {/* User's Exact Stair Direction Overlay */}
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626" />
-          </marker>
-        </defs>
-
-        {activeFloor === 0 && (
-          <g id="stair-flight-overlay" pointerEvents="none">
-            {[middleLanding, topLanding].map((slab, i) => (
-              <rect key={i}
-                x={300 + (slab.x - slab.args[0] / 2) * 42}
-                y={320 + (slab.z - slab.args[2] / 2) * 42}
-                width={slab.args[0] * 42} height={slab.args[2] * 42}
-                fill="#f4c892" fillOpacity="0.32" stroke="#b45309" strokeWidth="1.5"
-              />
-            ))}
-            {[...lowerSteps, ...upperSteps].map((step, i) => (
-              <rect key={i}
-                x={300 + (step.x - step.args[0] / 2) * 42}
-                y={320 + (step.z - step.args[2] / 2) * 42}
-                width={step.args[0] * 42} height={step.args[2] * 42}
-                fill="#e6c398" fillOpacity="0.5" stroke="#78350f" strokeWidth="1"
-              />
-            ))}
-            <path
-              d={stairRoute.map(([x, z], i) => `${i === 0 ? 'M' : 'L'} ${300 + x * 42} ${320 + z * 42}`).join(' ')}
-              fill="none" stroke="#dc2626" strokeWidth="3" strokeLinejoin="round"
-              markerEnd="url(#arrow)"
-            />
-            <text x={300 + 2.9 * 42} y={320 + 1.23 * 42} fontSize="9" fill="#b91c1c">
-              HALL ENTRY →
-            </text>
-          </g>
-        )}
+        {activeFloor === 0 && <GroundPlan />}
       </svg>
       <div className="plan-label">↑ REAR &nbsp; · &nbsp; FRONT / COURTYARD ↓</div>
     </div>
@@ -360,7 +276,7 @@ function App() {
           {mobileMenu ? <X /> : <Menu />}
         </button>
         <div className={'header-actions ' + (mobileMenu ? 'show' : '')}>
-          <span className="pill">● Design review · V4.7</span>
+          <span className="pill">● Design review · V4.8</span>
           <button onClick={()=>setPresentation(!presentation)}>{presentation?'Presentation mode':'Finish review'}</button>
           <button onClick={()=>exportVisual()}>Save image</button>
           <button onClick={savePdf}>Save PDF</button>
@@ -447,7 +363,9 @@ function App() {
             <div className="scene-note">
               {view === '3d'
                 ? 'Drag to orbit · Scroll to zoom · Click a room · Use standard view presets'
-                : 'Select a room · Dimensions in metres · Door swings and furniture on first floor'}
+                : activeFloor === 0
+                  ? 'Existing ground floor · Furniture, door swings, circulation and stair route'
+                  : 'Proposed first floor · Furniture, door swings and stair arrival'}
             </div>
           </div>
 
@@ -468,14 +386,24 @@ function App() {
           </div>
 
           <div className="project-card">
-            <p className="project-summary">Upper floor layout with a central Family Hall, the retained rear blank area, an additional large front free area, a Master Suite on the left and Bedroom 2 on the right.</p>
+            <p className="project-summary">{mode === 'ground'
+              ? 'Approved existing ground floor with two bedrooms, kitchen, work area, two bathrooms, prayer room, main hall, sit-out, car porch and the existing stair.'
+              : 'Upper floor layout with a central Family Hall, the retained rear blank area, an additional large front free area, a Master Suite on the left and Bedroom 2 on the right.'}</p>
             <div className="project-stats">
               <div><strong>2</strong><span>Floors</span></div>
               <div><strong>{layout.rooms.length}</strong><span>Spaces</span></div>
-              <div><strong>V4.7</strong><span>Revision</span></div>
+              <div><strong>V4.8</strong><span>Revision</span></div>
             </div>
             <div className="rules-heading"><span>Design intent</span><span>01</span></div>
-            <ul>
+            {mode === 'ground' ? <ul>
+              <li>All approved ground-floor room boundaries and dimensions remain unchanged.</li>
+              <li>The sit-out enters the Main Hall from its left corner; the hall remains the central circulation spine.</li>
+              <li>The rear work area is entered through the kitchen; Bathroom 2 remains beside the rear bedroom.</li>
+              <li>Bedroom 1 and the Prayer Room retain direct Main Hall access on the left.</li>
+              <li>The sink passage and common Bathroom 1 remain beside the existing staircase.</li>
+              <li>The car porch and traditional sit-out remain aligned with the existing front elevation.</li>
+              <li>Ground-floor bathrooms remain the reference for first-floor plumbing coordination.</li>
+            </ul> : <ul>
               <li>Ground floor retained as the approved existing layout.</li>
               <li>Existing stair endpoint opens directly into the family hall.</li>
               <li>The black-marked central zone is the 24.7 m² Family Hall and receives the existing stair arrival.</li>
@@ -485,12 +413,14 @@ function App() {
               <li>A separate triangular sit-out canopy projects in front of the continuous trapezium roof; the first-floor top uses a modern concrete slab.</li>
               <li>The upper exterior uses a white box frame, large picture window, recessed door, glass balcony and concealed soffit lights.</li>
               <li>The marked stair area is included as a recessed right-side tower with a tall window and continuous concrete roof.</li>
-            </ul>
+            </ul>}
           </div>
 
           <div className="flow-note">
-            <span className="eyebrow">FIRST-FLOOR ARRIVAL</span>
-            <strong>Fixed landing <span>→</span> Family hall <span>→</span> Two bedrooms</strong>
+            <span className="eyebrow">{mode === 'ground' ? 'GROUND-FLOOR ROUTE' : 'FIRST-FLOOR ARRIVAL'}</span>
+            <strong>{mode === 'ground'
+              ? <>Sit-out <span>→</span> Main hall <span>→</span> Existing stair</>
+              : <>Fixed landing <span>→</span> Family hall <span>→</span> Two bedrooms</>}</strong>
           </div>
 
           <div className="inspector-heading">
@@ -511,7 +441,7 @@ function App() {
           </div>
         </aside>
       </main>
-      <section className="print-sheet"><h1>Mangalam House</h1><p>V4.7 · {mode==='ground'?'Existing ground floor':mode==='first'?'Proposed first floor':'Combined review'} · {view==='2d'?'Floor plan':'3D view'}</p>{exportImage && <img src={exportImage} alt="Mangalam House design review"/>}<p>Concept proposal · Traditional lower roofs retained · Modern framed upper exterior and enclosed stair tower under one concrete roof.</p></section>
+      <section className="print-sheet"><h1>Mangalam House</h1><p>V4.8 · {mode==='ground'?'Existing ground floor':mode==='first'?'Proposed first floor':'Combined review'} · {view==='2d'?'Floor plan':'3D view'}</p>{exportImage && <img src={exportImage} alt="Mangalam House design review"/>}<p>Concept proposal · Traditional lower roofs retained · Modern framed upper exterior and enclosed stair tower under one concrete roof.</p></section>
     </div>
   );
 }
