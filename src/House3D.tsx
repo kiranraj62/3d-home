@@ -52,35 +52,62 @@ function createHipRoofGeometry(
   const halfRidge = ridgeW / 2;
   const rZ = ridgeOffsetZ;
 
-  const positions = new Float32Array([
-    // Front quad (facing +Z, +Y)
-    -halfRidge, height, rZ,
-    -halfW, 0, halfD,
-    halfW, 0, halfD,
+  let positions: Float32Array;
 
-    -halfRidge, height, rZ,
-    halfW, 0, halfD,
-    halfRidge, height, rZ,
+  if (ridgeW <= 0.001) {
+    // Pure triangular pyramid / hip canopy (4 clean triangular faces meeting at apex point [0, height, rZ])
+    positions = new Float32Array([
+      // Front triangle (facing +Z, +Y) -> perfectly triangular front elevation
+      0, height, rZ,
+      -halfW, 0, halfD,
+      halfW, 0, halfD,
 
-    // Back quad (facing -Z, +Y)
-    halfRidge, height, rZ,
-    halfW, 0, -halfD,
-    -halfW, 0, -halfD,
+      // Back triangle (facing -Z, +Y)
+      0, height, rZ,
+      halfW, 0, -halfD,
+      -halfW, 0, -halfD,
 
-    halfRidge, height, rZ,
-    -halfW, 0, -halfD,
-    -halfRidge, height, rZ,
+      // Left triangle (facing -X, +Y)
+      0, height, rZ,
+      -halfW, 0, -halfD,
+      -halfW, 0, halfD,
 
-    // Left triangle (facing -X, +Y)
-    -halfRidge, height, rZ,
-    -halfW, 0, -halfD,
-    -halfW, 0, halfD,
+      // Right triangle (facing +X, +Y)
+      0, height, rZ,
+      halfW, 0, halfD,
+      halfW, 0, -halfD
+    ]);
+  } else {
+    positions = new Float32Array([
+      // Front quad (facing +Z, +Y)
+      -halfRidge, height, rZ,
+      -halfW, 0, halfD,
+      halfW, 0, halfD,
 
-    // Right triangle (facing +X, +Y)
-    halfRidge, height, rZ,
-    halfW, 0, halfD,
-    halfW, 0, -halfD
-  ]);
+      -halfRidge, height, rZ,
+      halfW, 0, halfD,
+      halfRidge, height, rZ,
+
+      // Back quad (facing -Z, +Y)
+      halfRidge, height, rZ,
+      halfW, 0, -halfD,
+      -halfW, 0, -halfD,
+
+      halfRidge, height, rZ,
+      -halfW, 0, -halfD,
+      -halfRidge, height, rZ,
+
+      // Left triangle (facing -X, +Y)
+      -halfRidge, height, rZ,
+      -halfW, 0, -halfD,
+      -halfW, 0, halfD,
+
+      // Right triangle (facing +X, +Y)
+      halfRidge, height, rZ,
+      halfW, 0, halfD,
+      halfW, 0, -halfD
+    ]);
+  }
 
   geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geom.computeVertexNormals();
@@ -102,7 +129,7 @@ function KeralaRoof({ ghost = false }: { isUpper?: boolean; ghost?: boolean }) {
   }, []);
   const sitoutTriangleGeom = useMemo(() => {
     // Forward-projecting triangular hip canopy above the sit-out (the "front triangle")
-    return createHipRoofGeometry(5.25, 2.50, 1.8, .92, .45, 0.0);
+    return createHipRoofGeometry(5.25, 2.50, 0, 1.12, .45, 0.0);
   }, []);
 
   return (
@@ -174,20 +201,32 @@ function KeralaRoof({ ghost = false }: { isUpper?: boolean; ghost?: boolean }) {
           <meshStandardMaterial color="#eab308" metalness={0.85} roughness={0.25} />
         </mesh>
 
-        {/* 2. Front Triangle: Separate forward-projecting triangular sit-out canopy */}
+        {/* 2. Front Triangle: Forward-projecting pure triangular sit-out canopy */}
         <mesh position={[.58, -.12, 1.25]} geometry={sitoutTriangleGeom} castShadow receiveShadow>
           <meshStandardMaterial color={PALETTE.roofClay} roughness={.72} metalness={.08} />
         </mesh>
+        {/* Front horizontal carved eave */}
         <mesh position={[.58, -.17, 2.95]} castShadow>
           <boxGeometry args={[6.15, .11, .05]} />
           <meshStandardMaterial color={PALETTE.eaveWhite} roughness={.42} />
         </mesh>
-        <mesh position={[.58, .83, 1.25]} castShadow>
-          <boxGeometry args={[1.9, .09, .2]} />
+        {/* Side eave returns */}
+        <mesh position={[.58 - 3.05, -.17, 2.60]} castShadow>
+          <boxGeometry args={[0.05, .11, 0.72]} />
+          <meshStandardMaterial color={PALETTE.eaveWhite} roughness={.42} />
+        </mesh>
+        <mesh position={[.58 + 3.05, -.17, 2.60]} castShadow>
+          <boxGeometry args={[0.05, .11, 0.72]} />
+          <meshStandardMaterial color={PALETTE.eaveWhite} roughness={.42} />
+        </mesh>
+        {/* Triangular apex ridge cap */}
+        <mesh position={[.58, 1.01, 1.25]} castShadow>
+          <coneGeometry args={[0.13, 0.12, 4]} />
           <meshStandardMaterial color={PALETTE.roofRidge} roughness={.6} />
         </mesh>
-        <mesh position={[.58, 1.0, 1.25]} castShadow>
-          <coneGeometry args={[0.055, .18, 12]} />
+        {/* Brass / gold Thazhikakkuda finial at peak of the triangle */}
+        <mesh position={[.58, 1.16, 1.25]} castShadow>
+          <coneGeometry args={[0.06, 0.20, 12]} />
           <meshStandardMaterial color="#eab308" metalness={.85} roughness={.25} />
         </mesh>
       </group>
