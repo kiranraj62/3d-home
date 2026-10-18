@@ -1,0 +1,215 @@
+{
+  "width": 11.6,
+  "depth": 12.4,
+  "rooms": [
+    {
+      "id": "g-kitchen",
+      "name": "Kitchen",
+      "x": -3.596,
+      "z": -3.782,
+      "w": 3.48,
+      "d": 3.348,
+      "color": "#E8B86C",
+      "floor": 0,
+      "notes": "Rear-left kitchen aligned with Bedroom 1; no hall overlap."
+    },
+    {
+      "id": "g-work",
+      "name": "Work Area",
+      "x": -0.464,
+      "z": -4.774,
+      "w": 2.552,
+      "d": 1.364,
+      "color": "#D4B28C",
+      "floor": 0,
+      "notes": "Rear utility / work area connecting kitchen and hall."
+    },
+    {
+      "id": "g-bath2",
+      "name": "Bathroom 2",
+      "x": 1.856,
+      "z": -4.774,
+      "w": 2.088,
+      "d": 1.364,
+      "color": "#9DB7CB",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-bed2",
+      "name": "Bedroom 2",
+      "x": 4.176,
+      "z": -3.534,
+      "w": 2.552,
+      "d": 4.092,
+      "color": "#A5C8A5",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-bed1",
+      "name": "Bedroom 1",
+      "x": -3.596,
+      "z": -0.434,
+      "w": 3.48,
+      "d": 3.348,
+      "color": "#A5C8A5",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-hall",
+      "name": "Main Hall",
+      "x": 0.58,
+      "z": -0.062,
+      "w": 4.64,
+      "d": 8.06,
+      "color": "#B4D5E9",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-sink",
+      "name": "Sink + Passage",
+      "x": 3.48,
+      "z": -0.93,
+      "w": 1.16,
+      "d": 1.116,
+      "color": "#C5DCE9",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-bath1",
+      "name": "Bathroom 1",
+      "x": 4.756,
+      "z": -0.93,
+      "w": 1.392,
+      "d": 1.116,
+      "color": "#9DB7CB",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-stairs",
+      "name": "Staircase",
+      "x": 4.176,
+      "z": 0.372,
+      "w": 2.552,
+      "d": 1.24,
+      "color": "#B3A6CF",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-prayer",
+      "name": "Prayer Room",
+      "x": -3.596,
+      "z": 2.666,
+      "w": 3.48,
+      "d": 2.604,
+      "color": "#D6B4DE",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-porch",
+      "name": "Car Porch",
+      "x": 4.176,
+      "z": 3.41,
+      "w": 2.552,
+      "d": 4.836,
+      "color": "#C6C9CE",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "g-sitout",
+      "name": "Sit-out",
+      "x": 0.58,
+      "z": 4.96,
+      "w": 4.64,
+      "d": 1.736,
+      "color": "#E9CE9E",
+      "floor": 0,
+      "notes": "User-aligned schematic; provisional geometry only."
+    },
+    {
+      "id": "bed1",
+      "name": "Bedroom 1",
+      "x": -3.7,
+      "z": -3.8,
+      "w": 3.5,
+      "d": 3.6,
+      "color": "#b6cbb8",
+      "floor": 1,
+      "notes": "Smaller bedroom; no attached bathroom"
+    },
+    {
+      "id": "bed2",
+      "name": "Bedroom 2 \u00b7 Master",
+      "x": 3.2,
+      "z": -3.7,
+      "w": 4.5,
+      "d": 4,
+      "color": "#8db5ad",
+      "floor": 1,
+      "notes": "Larger master bedroom"
+    },
+    {
+      "id": "masterbath",
+      "name": "Master Attached Bath",
+      "x": 4.65,
+      "z": -0.15,
+      "w": 1.65,
+      "d": 2.15,
+      "color": "#a3c4d2",
+      "floor": 1,
+      "notes": "Only attached bathroom on the first floor"
+    },
+    {
+      "id": "hall",
+      "name": "Vertical Central Hall",
+      "x": -0.35,
+      "z": -1.65,
+      "w": 2.15,
+      "d": 7.6,
+      "color": "#e5d2a3",
+      "floor": 1,
+      "notes": "Front-to-back privacy circulation"
+    },
+    {
+      "id": "lounge",
+      "name": "Family Lounge",
+      "x": -2.2,
+      "z": 3,
+      "w": 4.3,
+      "d": 2.9,
+      "color": "#c5d8de",
+      "floor": 1,
+      "notes": "Front lounge"
+    },
+    {
+      "id": "stairs",
+      "name": "EXISTING Stair Landing",
+      "x": 3.9,
+      "z": 3.75,
+      "w": 3.5,
+      "d": 3.4,
+      "color": "#c7cad4",
+      "floor": 1,
+      "notes": "Fixed staircase above car porch; no bedroom or front window"
+    },
+    {
+      "id": "balcony",
+      "name": "Front Balcony",
+      "x": -2.3,
+      "z": 5.65,
+      "w": 4.4,
+      "d": 1.1,
+      "color": "#e4c7a1",
+      "floor": 1,
+      "notes": "Provisional balcony"
+    }
+  ]
+}
