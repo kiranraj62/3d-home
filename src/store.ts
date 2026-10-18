@@ -32,11 +32,14 @@ export const defaultLayout: Layout = {
     { id: 'g-porch', name: 'Car Porch', x: 4.176, z: 3.41, w: 2.552, d: 4.836, color: '#C6C9CE', floor: 0, notes: 'Front-right covered car porch' },
     { id: 'g-sitout', name: 'Sit-out', x: 0.58, z: 4.96, w: 4.64, d: 1.736, color: '#E9CE9E', floor: 0, notes: 'Front verandah / sit-out' },
 
-    // First floor V3.9: framed modern exterior with the stair tower included.
-    { id: 'bed1', name: 'Master Bedroom', x: 1.856, z: -3.75, w: 7.192, d: 3.3, color: '#8db5ad', floor: 1, notes: '19.5 m² master bedroom with the sleeping and dressing zones kept open together. The attached bathroom occupies the rear-right corner.' },
-    { id: 'bed2', name: 'Bedroom 2', x: -3.538, z: -2.9, w: 3.596, d: 5, color: '#b6cbb8', floor: 1, notes: '18.0 m² rear-left bedroom with independent hall access. Former bathroom area is returned to the family hall.' },
-    { id: 'masterbath', name: 'Attached Bath', x: 4.408, z: -4.45, w: 2.088, d: 1.9, color: '#a3c4d2', floor: 1, notes: '4.0 m² bathroom in the rear-right exterior corner. A short concealed rear chase returns the waste line to the proposed drop above ground-floor Bathroom 2.' },
-    { id: 'hall', name: 'Family Hall', x: -1.543, z: .934, w: 7.586, d: 6.068, color: '#e5d2a3', floor: 1, notes: '39.9 m² L-shaped family hall with the fixed stair arrival and separate bedroom doors. Net floor area excludes Bedroom 2; dimensions describe its bounding box.' },
+    // First floor V4.7: central family hall, retained rear blank strip, and an additional large front free area
+    { id: 'bed1', name: 'Master Bedroom', x: -3.538, z: -1.0, w: 3.596, d: 3.6, color: '#8db5ad', floor: 1, notes: '12.9 m² expanded master bedroom with king bed tucked in the bottom-left corner.' },
+    { id: 'closet', name: 'Walk-in Closet', x: -4.437, z: -3.8, w: 1.798, d: 2.0, color: '#c4b5a5', floor: 1, notes: '3.6 m² walk-in closet on the rear-left of the master suite.' },
+    { id: 'masterbath', name: 'Attached Bath', x: -2.639, z: -3.8, w: 1.798, d: 2.0, color: '#a3c4d2', floor: 1, notes: '3.6 m² attached ensuite bathroom on the rear-right of the master suite.' },
+    { id: 'blank-area', name: 'Rear Blank Area', x: -3.538, z: -5.1, w: 3.596, d: 0.6, color: '#dbe4e2', floor: 1, notes: '2.2 m² rear blank strip retained behind the walk-in closet and attached bathroom.' },
+    { id: 'front-free-area', name: 'Open / Free Area', x: -1.543, z: 2.384, w: 7.586, d: 3.168, color: '#dbe4e2', floor: 1, notes: '24.0 m² additional open free area across the front of the proposed first floor.' },
+    { id: 'bed2', name: 'Bedroom 2', x: 3.851, z: -3.75, w: 3.202, d: 3.3, color: '#b6cbb8', floor: 1, notes: '10.6 m² second bedroom positioned behind the staircase as marked.' },
+    { id: 'hall', name: 'Family Hall', x: .255, z: -2.3, w: 3.99, d: 6.2, color: '#e5d2a3', floor: 1, notes: '24.7 m² central family hall connected directly to the fixed stair arrival.' },
     { id: 'stairs', name: 'Fixed Landing', x: 2.7, z: -1.55, w: .9, d: 1.05, color: '#c7cad4', floor: 1, notes: 'Actual top landing of the existing two-flight stair; fixed geometry.' },
   ]
 };
@@ -58,7 +61,7 @@ type State = {
   importLayout: (l: Layout) => void;
 };
 
-const STORAGE_KEY = 'mangalam-review-v12';
+const STORAGE_KEY = 'mangalam-review-v23';
 
 export function validateLayout(value: unknown): Layout {
   const p = value as Layout;
@@ -70,7 +73,7 @@ export function validateLayout(value: unknown): Layout {
     if (matches.length !== 1) throw new Error('Missing or duplicate room.');
     const r = matches[0];
     if (['x','z','w','d','floor'].some(k => r[k as keyof Room] !== base[k as keyof Room]))
-      throw new Error('This layout changes fixed geometry. Use a V3.9 export.');
+      throw new Error('This layout changes fixed geometry. Use a V4.7 export.');
     if (!/^#[0-9a-f]{6}$/i.test(r.color)) throw new Error('Invalid finish colour.');
     return {...base, color: base.floor === 0 || base.id === 'stairs' ? base.color : r.color};
   });
@@ -82,7 +85,7 @@ function load(): Layout {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       // Keep prior finishes while applying new geometry; retain the old saved layout.
-      const previous = JSON.parse(localStorage.getItem('mangalam-review-v11') || localStorage.getItem('mangalam-review-v10') || localStorage.getItem('mangalam-review-v9') || 'null');
+      const previous = JSON.parse(localStorage.getItem('mangalam-review-v22') || localStorage.getItem('mangalam-review-v21') || localStorage.getItem('mangalam-review-v20') || localStorage.getItem('mangalam-review-v19') || localStorage.getItem('mangalam-review-v13') || localStorage.getItem('mangalam-review-v12') || localStorage.getItem('mangalam-review-v11') || localStorage.getItem('mangalam-review-v9') || 'null');
       if (Array.isArray(previous?.rooms)) return {...defaultLayout, rooms: defaultLayout.rooms.map(base => {
         const saved = previous.rooms.find((r: Room) => r.id === base.id);
         return base.floor === 1 && base.id !== 'stairs' && /^#[0-9a-f]{6}$/i.test(saved?.color || '') ? {...base, color:saved.color} : base;

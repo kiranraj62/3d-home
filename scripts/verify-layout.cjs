@@ -27,12 +27,15 @@ for(const f of furniture){
   // Exact rectangle intersection sum checks furniture containment in irregular room footprints.
   near(overlapArea({...f,id:'fixture'},owner),f.w*f.d);
 }
-near(roomArea(room('masterbath')),3.9672);
-near(roomArea(room('bed1')),19.5165);
+near(roomArea(room('bed1')),12.9456);
+near(roomArea(room('closet')),3.596);
+near(roomArea(room('masterbath')),3.596);
+near(roomArea(room('blank-area')),2.1576);
+near(roomArea(room('front-free-area')),24.032448);
+near(roomArea(room('bed2')),10.5666);
+near(roomArea(room('hall')),24.738);
 assert(inside(plumbingDrop,room(plumbingDrop.groundRoom)));
-assert(inside(plumbingDrop,serviceCore));
-assert(furniture.find(f=>f.id==='wc').x>room('g-bath2').x+room('g-bath2').w/2,
-  'Corner ensuite fixtures should connect laterally through the service chase');
+assert(inside(furniture.find(f=>f.id==='wc'),room('masterbath')),'Ensuite toilet must sit inside masterbath');
 assert.equal(rooms.filter(r=>r.id.includes('bath')).length,1);
 for(const d of doors){
   const walls=upperWalls.filter(([x1,z1,x2,z2])=>

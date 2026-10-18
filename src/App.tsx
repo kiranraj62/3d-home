@@ -28,7 +28,7 @@ function Plan2D({ activeFloor, setFloor }: { activeFloor: 0 | 1; setFloor: (f: 0
   return (
     <div className="plan">
       <div className="plan-label" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        <span>{activeFloor === 0 ? 'EXISTING GROUND FLOOR' : 'PROPOSED FIRST FLOOR · V3.9'}</span>
+        <span>{activeFloor === 0 ? 'EXISTING GROUND FLOOR' : 'PROPOSED FIRST FLOOR · V4.7'}</span>
         <div style={{ display: 'inline-flex', gap: '4px' }}>
           <button
             style={{
@@ -360,7 +360,7 @@ function App() {
           {mobileMenu ? <X /> : <Menu />}
         </button>
         <div className={'header-actions ' + (mobileMenu ? 'show' : '')}>
-          <span className="pill">● Design review · V3.9</span>
+          <span className="pill">● Design review · V4.7</span>
           <button onClick={()=>setPresentation(!presentation)}>{presentation?'Presentation mode':'Finish review'}</button>
           <button onClick={()=>exportVisual()}>Save image</button>
           <button onClick={savePdf}>Save PDF</button>
@@ -468,18 +468,20 @@ function App() {
           </div>
 
           <div className="project-card">
-            <p className="project-summary">Ground-floor bathroom positions guide the revised upstairs wet area, with two bedrooms and the existing stair connection.</p>
+            <p className="project-summary">Upper floor layout with a central Family Hall, the retained rear blank area, an additional large front free area, a Master Suite on the left and Bedroom 2 on the right.</p>
             <div className="project-stats">
               <div><strong>2</strong><span>Floors</span></div>
               <div><strong>{layout.rooms.length}</strong><span>Spaces</span></div>
-              <div><strong>V3.9</strong><span>Revision</span></div>
+              <div><strong>V4.7</strong><span>Revision</span></div>
             </div>
             <div className="rules-heading"><span>Design intent</span><span>01</span></div>
             <ul>
               <li>Ground floor retained as the approved existing layout.</li>
               <li>Existing stair endpoint opens directly into the family hall.</li>
-              <li>The attached bathroom occupies the rear-right corner of the master bedroom.</li>
-              <li>A short concealed rear chase returns the bathroom waste line to the proposed drop above Bathroom 2.</li>
+              <li>The black-marked central zone is the 24.7 m² Family Hall and receives the existing stair arrival.</li>
+              <li>The red-marked 24.0 m² front zone is an additional open free area.</li>
+              <li>The original 2.2 m² rear blank area remains behind the walk-in closet and attached bathroom.</li>
+              <li>Spacious Bedroom 2 on the right with direct family hall access.</li>
               <li>A separate triangular sit-out canopy projects in front of the continuous trapezium roof; the first-floor top uses a modern concrete slab.</li>
               <li>The upper exterior uses a white box frame, large picture window, recessed door, glass balcony and concealed soffit lights.</li>
               <li>The marked stair area is included as a recessed right-side tower with a tall window and continuous concrete roof.</li>
@@ -509,7 +511,7 @@ function App() {
           </div>
         </aside>
       </main>
-      <section className="print-sheet"><h1>Mangalam House</h1><p>V3.9 · {mode==='ground'?'Existing ground floor':mode==='first'?'Proposed first floor':'Combined review'} · {view==='2d'?'Floor plan':'3D view'}</p>{exportImage && <img src={exportImage} alt="Mangalam House design review"/>}<p>Concept proposal · Traditional lower roofs retained · Modern framed upper exterior and enclosed stair tower under one concrete roof.</p></section>
+      <section className="print-sheet"><h1>Mangalam House</h1><p>V4.7 · {mode==='ground'?'Existing ground floor':mode==='first'?'Proposed first floor':'Combined review'} · {view==='2d'?'Floor plan':'3D view'}</p>{exportImage && <img src={exportImage} alt="Mangalam House design review"/>}<p>Concept proposal · Traditional lower roofs retained · Modern framed upper exterior and enclosed stair tower under one concrete roof.</p></section>
     </div>
   );
 }

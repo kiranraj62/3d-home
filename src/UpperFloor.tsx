@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Text } from '@react-three/drei';
 import { useHouse } from './store';
-import { doors, furniture, hallOutline, masterOutline, upperWalls, roomParts, roomArea, roomLabels, plumbingDrop, serviceCore } from './planning';
+import { doors, furniture, hallOutline, masterOutline, upperWalls, roomParts, roomArea, roomLabels } from './planning';
 import { lowerSteps, upperSteps, middleLanding } from './stairGeometry';
 
 const px = (n: number) => 300 + n * 42;
@@ -23,32 +23,27 @@ export function UpperPlan() {
           <rect x={px(r.x-r.w/2)} y={pz(r.z-r.d/2)} width={r.w*42} height={r.d*42} fill={r.color} stroke={selected===r.id?'#b78150':'#42535a'} strokeWidth="2"/>}
       </g>;
     })}
-    <rect x={px(serviceCore.x-serviceCore.w/2)} y={pz(serviceCore.z-serviceCore.d/2)}
-      width={serviceCore.w*42} height={serviceCore.d*42} fill="#d8dfdc" stroke="#647a78" strokeWidth="1.5"/>
-    {furniture.map(f=><g key={f.id} pointerEvents="none">
-      <rect x={px(f.x-f.w/2)} y={pz(f.z-f.d/2)} width={f.w*42} height={f.d*42} rx="3" fill={f.color} stroke="#75847e"/>
-      {f.id.startsWith('bed')&&<rect x={px(f.x-f.w/2)+4} y={pz(f.z-f.d/2)+4} width={f.w*42-8} height="12" rx="3" fill="#fffaf0"/>}
-    </g>)}
+    {furniture.map(f=>{
+      const isSouth = (f as {head?: string}).head === 'south';
+      return <g key={f.id} pointerEvents="none">
+        <rect x={px(f.x-f.w/2)} y={pz(f.z-f.d/2)} width={f.w*42} height={f.d*42} rx="3" fill={f.color} stroke="#75847e"/>
+        {f.id.startsWith('bed')&&<rect x={px(f.x-f.w/2)+4} y={isSouth ? pz(f.z+f.d/2)-16 : pz(f.z-f.d/2)+4} width={f.w*42-8} height="12" rx="3" fill="#fffaf0"/>}
+      </g>;
+    })}
     {showGroundWetAreas && <g pointerEvents="none">
       {layout.rooms.filter(r=>r.id==='g-bath1'||r.id==='g-bath2').map(r=><rect key={r.id}
         x={px(r.x-r.w/2)} y={pz(r.z-r.d/2)} width={r.w*42} height={r.d*42}
         fill="#0e7490" fillOpacity=".07" stroke="#087e96" strokeWidth="2" strokeDasharray="5 3"/>)}
       <text x={px(3.8)} y={pz(-.45)} textAnchor="middle" fontSize="9" fill="#086477">GF Bath 1 below · stair void</text>
-      <path d={`M ${px(4.84)} ${pz(-4.82)} V ${pz(plumbingDrop.z)} H ${px(plumbingDrop.x)}`} fill="none" stroke="#087e96" strokeWidth="2" strokeDasharray="3 2"/>
-      <circle cx={px(plumbingDrop.x)} cy={pz(plumbingDrop.z)} r="4" fill="#087e96" stroke="white"/>
-      <path d={`M ${px(plumbingDrop.x)} ${pz(plumbingDrop.z)} V ${pz(-5.75)} H ${px(3.2)}`} fill="none" stroke="#087e96"/>
-      <text x={px(3.25)} y={pz(-5.7)} fontSize="9" fill="#086477">Proposed pipe drop</text>
-      <text x={px(1.856)} y={pz(-4.3)} textAnchor="middle" fontSize="8" fill="#086477">GF BATH 2 · STACK BELOW</text>
+      <text x={px(1.856)} y={pz(-4.3)} textAnchor="middle" fontSize="8" fill="#086477">GF BATH 2 BELOW</text>
     </g>}
     {layout.rooms.filter(r=>r.floor===1&&r.id!=='stairs').map(r=>{
       const [x,z]=roomLabels[r.id] || [r.x,r.z];
       return <g key={r.id} pointerEvents="none">
-        <text x={px(x)} y={pz(z)} textAnchor="middle" fontSize={r.id==='masterbath'?10:12} fontWeight="700">{r.id==='masterbath'?'Attached bath':r.name}</text>
+        <text x={px(x)} y={pz(z)} textAnchor="middle" fontSize={12} fontWeight="700">{r.name}</text>
         <text x={px(x)} y={pz(z)+12} textAnchor="middle" fontSize="9">{roomArea(r).toFixed(1)} m²</text>
       </g>;
     })}
-    <text x={px(-.55)} y={pz(-3.75)} textAnchor="middle" fontSize="9" fill="#42535a" pointerEvents="none">Dressing</text>
-    <text x={px(serviceCore.x)} y={pz(serviceCore.z)+3} textAnchor="middle" fontSize="7" fill="#42535a" pointerEvents="none">PIPE CHASE</text>
     {doors.map(d=><g key={d.id} pointerEvents="none" transform={`translate(${px(d.x)},${pz(d.z)}) rotate(${d.axis==='z'?90:0})`}>
       <line x1={-d.width*21} x2={d.width*21} stroke="#f6f4ed" strokeWidth="5"/>
       {d.id!=='arrival' && <><line x1={-d.width*21} y1="0" x2={-d.width*21} y2={d.width*42} stroke="#6b3b1e" strokeWidth="2"/><path d={`M ${d.width*21} 0 A ${d.width*42} ${d.width*42} 0 0 1 ${-d.width*21} ${d.width*42}`} fill="none" stroke="#6b3b1e" strokeWidth="1"/></>}
@@ -79,7 +74,6 @@ export function UpperInterior() {
       {roomParts(r).map((part,i)=><Block key={i} {...part} h={.2} y={3.1} color={r.color}/>)}
       <Text position={[(roomLabels[r.id] || [r.x,r.z])[0],3.23,(roomLabels[r.id] || [r.x,r.z])[1]]} rotation={[-Math.PI/2,0,0]} fontSize={.18} color="#253b3b">{r.name}</Text>
     </group>)}
-    <Block {...serviceCore} h={.2} y={3.1} color="#d8dfdc" />
     {upperWalls.map(([x1,z1,x2,z2],i)=>{
       const alongX=z1===z2; const start=alongX?x1:z1; const end=alongX?x2:z2;
       const opening=doors.find(d=>d.axis===(alongX?'x':'z')&&Math.abs((alongX?d.z:d.x)-(alongX?z1:x1))<.001&&(alongX?d.x:d.z)>start&&(alongX?d.x:d.z)<end);
@@ -88,7 +82,14 @@ export function UpperInterior() {
       const center=alongX?opening.x:opening.z;const a=center-opening.width/2,b=center+opening.width/2;
       return <group key={i}>{draw(start,a)}{draw(b,end)}{draw(a,b,.75,5.775)}</group>;
     })}
-    {furniture.map(f=><group key={f.id}><Block x={f.x} z={f.z} w={f.w} d={f.d} h={f.h} y={3.2+f.h/2} color={f.color}/>{f.id.startsWith('bed')&&<Block x={f.x} z={f.z-f.d/2+.3} w={f.w-.2} d={.4} h={.12} y={3.2+f.h+.06} color="#f8f3e9"/>}</group>)}
+    {furniture.map(f=>{
+      const isSouth = (f as {head?: string}).head === 'south';
+      const pillowZ = isSouth ? f.z + f.d/2 - .3 : f.z - f.d/2 + .3;
+      return <group key={f.id}>
+        <Block x={f.x} z={f.z} w={f.w} d={f.d} h={f.h} y={3.2+f.h/2} color={f.color}/>
+        {f.id.startsWith('bed')&&<Block x={f.x} z={pillowZ} w={f.w-.2} d={.4} h={.12} y={3.2+f.h+.06} color="#f8f3e9"/>}
+      </group>;
+    })}
     {/* Guard the open edges of the existing landing, keeping the west arrival open. */}
     {[-2.075,-1.025].map(z=><group key={z}><Block x={2.7} z={z} w={.9} d={.04} h={.04} y={4.25} color="#6b3b1e"/>{[2.3,2.7,3.1].map(x=><Block key={x} x={x} z={z} w={.035} d={.035} h={1.05} y={3.725} color="#6b3b1e"/>)}</group>)}
   </group>;
