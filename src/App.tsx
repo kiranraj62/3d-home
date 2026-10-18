@@ -410,6 +410,24 @@ function App() {
               ))}
             </div>
             {view === '3d' && (
+              <div className="bottom-controls model-controls">
+                <button className={roof ? 'toggled' : ''} onClick={() => setRoof(!roof)}>
+                  {roof ? <Eye size={16} /> : <EyeOff size={16} />} Roof {roof ? 'on' : 'off'}
+                </button>
+                <button
+                  className={before ? 'toggled' : ''}
+                  onClick={() => {
+                    setBefore(!before);
+                    setMode(before ? 'both' : 'ground');
+                    setSelected(null);
+                  }}
+                >
+                  <Layers3 size={16} />
+                  {before ? 'Existing house' : 'Proposed extension'}
+                </button>
+              </div>
+            )}
+            {view === '3d' && (
               <div className="segmented view-presets" aria-label="3D camera view">
                 {(['isometric', 'front', 'top'] as const).map((preset) => (
                   <button
@@ -438,22 +456,6 @@ function App() {
           {pdfUrl && <a className="export-status" href={pdfUrl} download="mangalam-house-v3-review.pdf">Download prepared PDF</a>}
           {exportImage && <details className="export-preview"><summary>Exported image preview</summary><img src={exportImage} alt="Exported design view"/><a href={exportImage} download="mangalam-house-review.png">Download this image</a></details>}
           {mode!=='ground' && !before && roof && view==='3d' && <p className="roof-note">The existing tiled roof remains one continuous trapezium. A separate triangular sit-out canopy projects forward toward the courtyard; the first-floor top remains a modern concrete flat roof.</p>}
-
-          {view==='3d' && <div className="bottom-controls">
-            <button className={roof ? 'toggled' : ''} onClick={() => setRoof(!roof)}>
-              {roof ? <Eye size={17} /> : <EyeOff size={17} />} Roof {roof ? 'on' : 'off'}
-            </button>
-            <button
-              className={before ? 'toggled' : ''}
-              onClick={() => {
-                setBefore(!before);
-                setMode(before?'both':'ground');setSelected(null);
-              }}
-            >
-              <Layers3 size={17} />
-              {before ? 'Existing house' : 'Proposed extension'}
-            </button>
-          </div>}
         </section>
 
         <aside>

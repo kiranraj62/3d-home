@@ -153,7 +153,7 @@ aside { display: flex; flex-direction: column; gap: 18px; min-width: 0; overflow
   .segmented button { padding: 8px 8px; font-size: 10px; }
   .view-presets { width: 100%; margin-left: 0; }
   .scene { min-height: 380px; height: 58vh; border-radius: 15px; }
-  .scene-note { right: 12px; bottom: 12px; left: 12px; text-align: center; }
-  .bottom-controls button { flex: 1; justify-content: center; padding: 9px 7px; font-size: 10px; }
+  .bottom-controls { width: 100%; display: flex; gap: 8px; }
+  .bottom-controls button { flex: 1; justify-content: center; padding: 9px 7px; font-size: 11px; min-height: 38px; }
   aside { padding: 20px 15px; }
 }
