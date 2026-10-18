@@ -1109,230 +1109,283 @@ function Stairs() {
 function FordFreestyle() {
   const carX = 4.18;
   const carY = 0.22;
-  const carZ = 3.82; // Perfectly parked sheltered under the car porch roof (porch is z: 0.99 to 5.83)
+  const carZ = 3.82; // Sheltered under car porch (porch is z: 0.99 to 5.83)
 
   return (
     <group position={[carX, carY, carZ]}>
-      {/* 1. Main Metallic Moondust Silver Body Shell */}
-      <mesh position={[0, 0.44, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.72, 0.48, 3.82]} />
+      {/* 1. Ground Contact Shadow */}
+      <mesh position={[0, 0.015, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[1.92, 4.05]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.42} />
+      </mesh>
+
+      {/* 2. Dark Underbody Pan */}
+      <mesh position={[0, 0.16, 0]} castShadow>
+        <boxGeometry args={[1.62, 0.1, 3.65]} />
+        <meshStandardMaterial color="#111827" roughness={0.95} />
+      </mesh>
+
+      {/* 3. Lower Crossover Protective Cladding (360° Matte Charcoal) */}
+      <group position={[0, 0.28, 0]}>
+        {/* Main Lower Sill Cladding */}
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.74, 0.22, 3.82]} />
+          <meshStandardMaterial color="#1a2026" roughness={0.92} metalness={0.06} />
+        </mesh>
+        {/* Side Door Cladding Inserts (Freestyle Embossed Protector Strips) */}
+        {[-0.875, 0.875].map((sx, idx) => (
+          <mesh key={`sill-strip-${idx}`} position={[sx, 0.02, 0.02]} castShadow>
+            <boxGeometry args={[0.025, 0.14, 2.15]} />
+            <meshStandardMaterial color="#0f141a" roughness={0.95} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* 4. Molded Wheel Arch Flares (Iconic Crossover Stance) */}
+      {[
+        { x: -0.875, z: -1.22 }, // Front Left
+        { x: 0.875, z: -1.22 },  // Front Right
+        { x: -0.875, z: 1.25 },  // Rear Left
+        { x: 0.875, z: 1.25 },   // Rear Right
+      ].map((arch, idx) => (
+        <group key={`arch-${idx}`} position={[arch.x, 0.38, arch.z]}>
+          {/* Main Arch Flare Box */}
+          <mesh castShadow>
+            <boxGeometry args={[0.045, 0.24, 0.76]} />
+            <meshStandardMaterial color="#1a2026" roughness={0.92} />
+          </mesh>
+          {/* Outer Curved Edge Lip */}
+          <mesh position={[arch.x > 0 ? 0.02 : -0.02, 0.08, 0]} castShadow>
+            <boxGeometry args={[0.015, 0.08, 0.72]} />
+            <meshStandardMaterial color="#11161b" roughness={0.95} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* 5. Sculpted Main Body (Metallic Moondust Silver) */}
+      {/* Mid-body / Beltline Section */}
+      <mesh position={[0, 0.54, 0.04]} castShadow receiveShadow>
+        <boxGeometry args={[1.72, 0.34, 3.76]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+      </mesh>
+
+      {/* Hood / Bonnet (Slopes gently forward down into front fascia) */}
+      <mesh
+        position={[0, 0.69, -1.28]}
+        rotation={[0.075, 0, 0]}
+        castShadow
+        receiveShadow
+      >
+        <boxGeometry args={[1.56, 0.12, 1.34]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+      </mesh>
+      {/* Hood Dual Character Crease Lines */}
+      {[-0.44, 0.44].map((hx, idx) => (
+        <mesh
+          key={`hood-crease-${idx}`}
+          position={[hx, 0.755, -1.28]}
+          rotation={[0.075, 0, 0]}
+        >
+          <boxGeometry args={[0.02, 0.015, 1.26]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} />
+        </mesh>
+      ))}
+
+      {/* Windshield Cowl & Dual Wipers at Hood Base */}
+      <mesh position={[0, 0.78, -0.65]} rotation={[-0.1, 0, 0]}>
+        <boxGeometry args={[1.52, 0.04, 0.16]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.9} />
+      </mesh>
+      {[-0.32, 0.28].map((wx, idx) => (
+        <mesh key={`wiper-fr-${idx}`} position={[wx, 0.81, -0.63]} rotation={[0.3, 0, -0.15]}>
+          <boxGeometry args={[0.42, 0.015, 0.02]} />
+          <meshStandardMaterial color="#1e242b" roughness={0.8} />
+        </mesh>
+      ))}
+
+      {/* 6. Aerodynamic Cabin Greenhouse (Tapered & Raked) */}
+      {/* Front Windshield (Raked Back ~40°) */}
+      <mesh
+        position={[0, 1.05, -0.42]}
+        rotation={[0.62, 0, 0]}
+        castShadow
+      >
+        <boxGeometry args={[1.46, 0.05, 0.86]} />
         <meshStandardMaterial
-          color="#cbd5e1"
-          metalness={0.8}
-          roughness={0.22}
+          color="#0f172a"
+          roughness={0.06}
+          metalness={0.7}
+          transparent
+          opacity={0.88}
         />
       </mesh>
 
-      {/* 2. Black Rugged Crossover Protective Cladding (Sills & Bumpers) */}
-      <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.74, 0.2, 3.84]} />
-        <meshStandardMaterial color="#1e242b" roughness={0.88} />
+      {/* Cabin Side Windows & Smoked Privacy Glass */}
+      <mesh position={[0, 1.08, 0.28]} castShadow>
+        <boxGeometry args={[1.48, 0.46, 1.84]} />
+        <meshStandardMaterial
+          color="#090d16"
+          roughness={0.08}
+          metalness={0.65}
+          transparent
+          opacity={0.9}
+        />
       </mesh>
 
-      {/* Wheel Arch Cladding Flares (Iconic Freestyle Crossover Stance) */}
-      {[
-        { x: -0.87, z: -1.22 },
-        { x: 0.87, z: -1.22 },
-        { x: -0.87, z: 1.25 },
-        { x: 0.87, z: 1.25 },
-      ].map((arch, idx) => (
-        <mesh key={`arch-${idx}`} position={[arch.x, 0.38, arch.z]} castShadow>
-          <boxGeometry args={[0.04, 0.22, 0.72]} />
-          <meshStandardMaterial color="#1e242b" roughness={0.9} />
-        </mesh>
-      ))}
-
-      {/* Front Bumper & Black Hexagonal Mesh Grille (Facing North -Z into porch) */}
-      <group position={[0, 0.42, -1.92]}>
-        {/* Honeycomb Grille */}
-        <mesh castShadow>
-          <boxGeometry args={[0.95, 0.26, 0.06]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.9} />
-        </mesh>
-        {/* Blue Ford Oval Badge */}
-        <mesh position={[0, 0.02, -0.04]}>
-          <boxGeometry args={[0.16, 0.08, 0.02]} />
-          <meshStandardMaterial color="#1d4ed8" metalness={0.6} roughness={0.3} />
-        </mesh>
-        {/* Swept-Back Front Headlamps */}
-        {[-0.62, 0.62].map((hx, idx) => (
-          <mesh key={`hl-${idx}`} position={[hx, 0.06, 0.02]} castShadow>
-            <boxGeometry args={[0.34, 0.16, 0.08]} />
-            <meshStandardMaterial
-              color="#f8fafc"
-              roughness={0.1}
-              metalness={0.8}
-            />
+      {/* Black B-Pillars & C-Pillars Between Windows */}
+      {[-0.745, 0.745].map((px, idx) => (
+        <group key={`pillars-${idx}`}>
+          {/* B-Pillar */}
+          <mesh position={[px, 1.08, 0.12]}>
+            <boxGeometry args={[0.035, 0.46, 0.12]} />
+            <meshStandardMaterial color="#090d16" roughness={0.95} />
           </mesh>
-        ))}
-        {/* Silver Front Skid Plate */}
-        <mesh position={[0, -0.16, 0.01]}>
-          <boxGeometry args={[0.82, 0.08, 0.05]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.7} roughness={0.35} />
-        </mesh>
-      </group>
-
-      {/* 3. Upper Cabin Greenhouse & Sloped Smoked Tinted Glass */}
-      <group position={[0, 0.94, -0.08]}>
-        {/* Cabin Glass Body */}
-        <mesh castShadow>
-          <boxGeometry args={[1.54, 0.54, 2.38]} />
-          <meshStandardMaterial
-            color="#0f172a"
-            roughness={0.08}
-            metalness={0.65}
-            transparent
-            opacity={0.88}
-          />
-        </mesh>
-        {/* Metallic Silver Roof Panel */}
-        <mesh position={[0, 0.28, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1.52, 0.05, 2.34]} />
-          <meshStandardMaterial
-            color="#cbd5e1"
-            metalness={0.8}
-            roughness={0.22}
-          />
-        </mesh>
-        {/* Black B & C Pillars */}
-        {[-0.78, 0.78].map((px, idx) => (
-          <group key={`pil-${idx}`}>
-            <mesh position={[px, 0, 0]}>
-              <boxGeometry args={[0.04, 0.52, 0.14]} />
-              <meshStandardMaterial color="#090d16" roughness={0.9} />
-            </mesh>
-            <mesh position={[px, 0, 0.7]}>
-              <boxGeometry args={[0.04, 0.52, 0.14]} />
-              <meshStandardMaterial color="#090d16" roughness={0.9} />
-            </mesh>
-          </group>
-        ))}
-        {/* Micro-Antenna at Rear Roof */}
-        <mesh position={[0, 0.38, 0.95]} rotation={[0.3, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.008, 0.014, 0.2, 8]} />
-          <meshStandardMaterial color="#1e242b" roughness={0.8} />
-        </mesh>
-      </group>
-
-      {/* 4. Signature Ford Freestyle Functional Roof Rails (Left & Right) */}
-      {[-0.62, 0.62].map((rx, idx) => (
-        <group key={`rail-${idx}`} position={[rx, 1.32, -0.08]}>
-          {/* Main Silver Longitudinal Rail */}
-          <mesh castShadow>
-            <boxGeometry args={[0.045, 0.04, 2.1]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} />
+          {/* C-Pillar */}
+          <mesh position={[px, 1.08, 0.86]}>
+            <boxGeometry args={[0.035, 0.46, 0.14]} />
+            <meshStandardMaterial color="#090d16" roughness={0.95} />
           </mesh>
-          {/* Front & Rear Rail Feet */}
-          <mesh position={[0, -0.04, -0.95]}>
-            <boxGeometry args={[0.06, 0.06, 0.12]} />
-            <meshStandardMaterial color="#1e242b" />
-          </mesh>
-          <mesh position={[0, -0.04, 0.95]}>
-            <boxGeometry args={[0.06, 0.06, 0.12]} />
-            <meshStandardMaterial color="#1e242b" />
+          {/* Chrome Beltline Strip Under Glass */}
+          <mesh position={[px, 0.84, 0.28]}>
+            <boxGeometry args={[0.02, 0.02, 1.88]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} roughness={0.15} />
           </mesh>
         </group>
       ))}
 
-      {/* 5. Rear Tailgate, Lamps, Spoiler & Kerala License Plate (Facing South +Z to Courtyard) */}
-      <group position={[0, 0.54, 1.92]}>
-        {/* Tailgate Hatch Panel */}
+      {/* Sloped Rear Hatch Glass Window (Raked at ~32° facing Courtyard) */}
+      <mesh
+        position={[0, 1.12, 1.48]}
+        rotation={[-0.52, 0, 0]}
+        castShadow
+      >
+        <boxGeometry args={[1.42, 0.05, 0.74]} />
+        <meshStandardMaterial
+          color="#0f172a"
+          roughness={0.06}
+          metalness={0.7}
+          transparent
+          opacity={0.92}
+        />
+      </mesh>
+
+      {/* Metallic Moondust Silver Roof Panel */}
+      <mesh position={[0, 1.34, 0.32]} castShadow receiveShadow>
+        <boxGeometry args={[1.38, 0.06, 1.76]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+      </mesh>
+      {/* Longitudinal Roof Ribs / Flutes (Ford Aerodynamic Roof Stiffeners) */}
+      {[-0.38, -0.14, 0.14, 0.38].map((rx, idx) => (
+        <mesh key={`roof-flute-${idx}`} position={[rx, 1.375, 0.32]} castShadow>
+          <boxGeometry args={[0.04, 0.015, 1.62]} />
+          <meshStandardMaterial color="#b6c2cf" metalness={0.85} roughness={0.22} />
+        </mesh>
+      ))}
+      {/* Rear Roof Shark-Fin / Whip Micro-Antenna */}
+      <group position={[0, 1.38, 1.15]} rotation={[0.32, 0, 0]}>
+        <mesh castShadow>
+          <coneGeometry args={[0.02, 0.06, 8]} />
+          <meshStandardMaterial color="#1a2026" roughness={0.8} />
+        </mesh>
+        <mesh position={[0, 0.09, 0]} castShadow>
+          <cylinderGeometry args={[0.005, 0.008, 0.18, 6]} />
+          <meshStandardMaterial color="#11161b" roughness={0.7} />
+        </mesh>
+      </group>
+
+      {/* 7. Signature Ford Freestyle Functional Roof Rails */}
+      {[-0.58, 0.58].map((rx, idx) => (
+        <group key={`rail-${idx}`} position={[rx, 1.41, 0.32]}>
+          {/* Main Satin Silver Aero Rail */}
+          <mesh castShadow>
+            <boxGeometry args={[0.045, 0.038, 1.86]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.88} roughness={0.22} />
+          </mesh>
+          {/* 3 Stanchions (Front, Mid, Rear) in Matte Black */}
+          {[-0.84, 0.0, 0.84].map((sz, sIdx) => (
+            <mesh key={`stanchion-${sIdx}`} position={[0, -0.04, sz]} castShadow>
+              <boxGeometry args={[0.055, 0.05, 0.14]} />
+              <meshStandardMaterial color="#1a2026" roughness={0.9} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+
+      {/* 8. Tailgate, Rear Spoiler & Rear Facade (Directly Facing Courtyard +Z) */}
+      <group position={[0, 0.58, 1.88]}>
+        {/* Tailgate Lower Body Shell */}
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[1.7, 0.68, 0.06]} />
-          <meshStandardMaterial
-            color="#cbd5e1"
-            metalness={0.8}
-            roughness={0.22}
-          />
+          <boxGeometry args={[1.7, 0.58, 0.1]} />
+          <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
         </mesh>
 
-        {/* Rear Integrated Roof Spoiler */}
-        <mesh position={[0, 0.68, -0.1]} castShadow>
-          <boxGeometry args={[1.48, 0.08, 0.28]} />
-          <meshStandardMaterial color="#cbd5e1" metalness={0.8} roughness={0.22} />
-        </mesh>
-        {/* High-Mounted Stop Lamp (Red LED strip) */}
-        <mesh position={[0, 0.68, 0.05]}>
-          <boxGeometry args={[0.32, 0.03, 0.02]} />
-          <meshStandardMaterial color="#ef4444" roughness={0.2} />
-        </mesh>
-
-        {/* Rear Window Wiper Arm & Blade */}
-        <group position={[0, 0.44, 0.04]} rotation={[0, 0, -0.25]}>
-          <mesh position={[0, 0, 0]}>
-            <cylinderGeometry args={[0.012, 0.012, 0.03, 8]} />
-            <meshStandardMaterial color="#0f172a" />
+        {/* Aerodynamic Integrated Roof Spoiler (Overhanging Rear Glass) */}
+        <group position={[0, 0.74, -0.22]}>
+          <mesh castShadow>
+            <boxGeometry args={[1.44, 0.07, 0.32]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
           </mesh>
-          <mesh position={[0.12, 0.06, 0.01]} rotation={[0, 0, -0.7]}>
-            <boxGeometry args={[0.26, 0.014, 0.01]} />
-            <meshStandardMaterial color="#0f172a" />
+          {/* High-Mounted Stop Lamp (HMSL Red LED Strip) */}
+          <mesh position={[0, 0.0, 0.16]}>
+            <boxGeometry args={[0.34, 0.024, 0.015]} />
+            <meshStandardMaterial color="#ef4444" roughness={0.15} />
           </mesh>
         </group>
 
-        {/* Ruby Red Combination Tail Lamps */}
-        {[-0.66, 0.66].map((tx, idx) => (
-          <group key={`tail-${idx}`} position={[tx, 0.18, 0.04]}>
-            {/* Red Housing */}
-            <mesh castShadow>
-              <boxGeometry args={[0.26, 0.32, 0.05]} />
-              <meshStandardMaterial color="#dc2626" roughness={0.2} />
-            </mesh>
-            {/* Clear White Reverse Indicator Section */}
-            <mesh position={[0, -0.06, 0.02]}>
-              <boxGeometry args={[0.22, 0.08, 0.02]} />
-              <meshStandardMaterial color="#f8fafc" roughness={0.15} />
-            </mesh>
-          </group>
+        {/* Rear Window Wiper with Motor Pivot Cap */}
+        <group position={[-0.02, 0.44, -0.08]} rotation={[0, 0, -0.25]}>
+          <mesh>
+            <cylinderGeometry args={[0.018, 0.018, 0.035, 12]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+          </mesh>
+          <mesh position={[0.14, 0.07, 0.01]} rotation={[0, 0, -0.68]}>
+            <boxGeometry args={[0.3, 0.015, 0.012]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+          </mesh>
+        </group>
+
+        {/* Sculpted License Plate Recess Cavity */}
+        <mesh position={[0, -0.04, 0.052]}>
+          <boxGeometry args={[0.74, 0.22, 0.03]} />
+          <meshStandardMaterial color="#b3c0ce" metalness={0.65} roughness={0.35} />
+        </mesh>
+        {/* License Plate Illuminator LED Housings Under Overhang */}
+        {[-0.18, 0.18].map((lx, idx) => (
+          <mesh key={`plate-light-${idx}`} position={[lx, 0.065, 0.055]}>
+            <boxGeometry args={[0.08, 0.015, 0.02]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.1} />
+          </mesh>
         ))}
 
-        {/* Blue Ford Oval Badge on Hatch */}
-        <mesh position={[0, 0.22, 0.04]}>
-          <boxGeometry args={[0.15, 0.07, 0.02]} />
-          <meshStandardMaterial color="#1d4ed8" metalness={0.7} roughness={0.2} />
-        </mesh>
-
-        {/* FREESTYLE Badge (Left) */}
-        <Text
-          position={[-0.48, 0.12, 0.04]}
-          fontSize={0.04}
-          color="#64748b"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          FREESTYLE
-        </Text>
-
-        {/* TITANIUM+ Badge (Right) */}
-        <Text
-          position={[0.48, 0.12, 0.04]}
-          fontSize={0.038}
-          color="#64748b"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          TITANIUM+
-        </Text>
-
-        {/* Actual Kerala Number Plate from Reference Photograph: KL 33 L 8958 */}
-        <group position={[0, -0.06, 0.05]}>
-          {/* White Reflective Plate */}
+        {/* High-Security Kerala Registration Plate: KL 33 L 8958 */}
+        <group position={[0, -0.04, 0.068]}>
+          {/* White Reflective HSRP Plate */}
           <mesh castShadow>
-            <boxGeometry args={[0.62, 0.15, 0.02]} />
-            <meshStandardMaterial color="#f8fafc" roughness={0.3} />
+            <boxGeometry args={[0.62, 0.15, 0.012]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.25} />
           </mesh>
-          {/* Black Plate Border */}
-          <mesh position={[0, 0, 0.012]}>
-            <boxGeometry args={[0.6, 0.13, 0.005]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.2} />
+          {/* Black Outer Border */}
+          <mesh position={[0, 0, 0.007]}>
+            <boxGeometry args={[0.6, 0.13, 0.002]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.4} />
           </mesh>
-          {/* License Plate Text */}
+          {/* Inner White Field */}
+          <mesh position={[0.015, 0, 0.009]}>
+            <boxGeometry args={[0.56, 0.118, 0.002]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.2} />
+          </mesh>
+          {/* Blue IND Hologram Band on Left */}
+          <mesh position={[-0.26, 0, 0.011]}>
+            <boxGeometry args={[0.045, 0.118, 0.002]} />
+            <meshStandardMaterial color="#1e40af" roughness={0.3} />
+          </mesh>
+          {/* Crisp Embossed License Text */}
           <Text
-            position={[0, 0, 0.02]}
-            fontSize={0.065}
+            position={[0.025, 0, 0.016]}
+            fontSize={0.068}
             color="#0f172a"
             fontWeight="bold"
+            letterSpacing={0.04}
             anchorX="center"
             anchorY="middle"
           >
@@ -1340,83 +1393,343 @@ function FordFreestyle() {
           </Text>
         </group>
 
-        {/* Lower Rear Bumper Cladding & Silver Skid Plate */}
-        <mesh position={[0, -0.24, 0.02]}>
-          <boxGeometry args={[1.72, 0.18, 0.06]} />
-          <meshStandardMaterial color="#1e242b" roughness={0.88} />
-        </mesh>
-        <mesh position={[0, -0.28, 0.05]}>
-          <boxGeometry args={[0.82, 0.08, 0.04]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.7} roughness={0.35} />
-        </mesh>
-        {/* Red Rear Bumper Reflectors */}
-        {[-0.64, 0.64].map((rx, idx) => (
-          <mesh key={`ref-${idx}`} position={[rx, -0.22, 0.06]}>
-            <boxGeometry args={[0.18, 0.04, 0.01]} />
-            <meshStandardMaterial color="#b91c1c" />
+        {/* Official Blue Ford Oval Badge on Hatch Center */}
+        <group position={[0, 0.18, 0.058]}>
+          {/* Chrome Oval Outer Bezel */}
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.052, 0.052, 0.015, 16]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.92} roughness={0.15} />
+          </mesh>
+          {/* Royal Blue Ford Center Inset */}
+          <mesh position={[0, 0, 0.009]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.044, 0.044, 0.01, 16]} />
+            <meshStandardMaterial color="#1d4ed8" metalness={0.7} roughness={0.25} />
+          </mesh>
+          {/* Ford Script Bar */}
+          <mesh position={[0, 0, 0.015]}>
+            <boxGeometry args={[0.06, 0.012, 0.005]} />
+            <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+          </mesh>
+        </group>
+
+        {/* Chrome FREESTYLE Model Badge (Left) */}
+        <Text
+          position={[-0.48, 0.15, 0.056]}
+          fontSize={0.042}
+          color="#475569"
+          fontWeight="bold"
+          letterSpacing={0.08}
+          anchorX="center"
+          anchorY="middle"
+        >
+          FREESTYLE
+        </Text>
+
+        {/* Chrome TITANIUM+ Trim Badge (Right) */}
+        <Text
+          position={[0.48, 0.15, 0.056]}
+          fontSize={0.038}
+          color="#475569"
+          fontWeight="bold"
+          letterSpacing={0.06}
+          anchorX="center"
+          anchorY="middle"
+        >
+          TITANIUM+
+        </Text>
+
+        {/* Rear Fog & Reverse Sensors (4 Ultrasonic Sensor Dots) */}
+        {[-0.56, -0.22, 0.22, 0.56].map((sx, idx) => (
+          <mesh key={`sensor-${idx}`} position={[sx, -0.19, 0.06]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.01, 8]} />
+            <meshStandardMaterial color="#0f141a" roughness={0.8} />
           </mesh>
         ))}
+
+        {/* Rugged Rear Bumper Cladding */}
+        <mesh position={[0, -0.25, 0.05]} castShadow receiveShadow>
+          <boxGeometry args={[1.74, 0.22, 0.14]} />
+          <meshStandardMaterial color="#1a2026" roughness={0.92} />
+        </mesh>
+
+        {/* Dual Red Rear Bumper Reflectors */}
+        {[-0.66, 0.66].map((rx, idx) => (
+          <mesh key={`reflector-${idx}`} position={[rx, -0.24, 0.125]}>
+            <boxGeometry args={[0.18, 0.045, 0.01]} />
+            <meshStandardMaterial color="#dc2626" roughness={0.15} />
+          </mesh>
+        ))}
+
+        {/* Metallic Silver Rear Crossover Skid Plate / Diffuser */}
+        <group position={[0, -0.31, 0.1]}>
+          <mesh castShadow>
+            <boxGeometry args={[0.92, 0.12, 0.06]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} />
+          </mesh>
+          {/* 3 Aerodynamic Diffuser Strakes */}
+          {[-0.24, 0.0, 0.24].map((dx, idx) => (
+            <mesh key={`diff-strake-${idx}`} position={[dx, -0.01, 0.035]}>
+              <boxGeometry args={[0.018, 0.08, 0.04]} />
+              <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.3} />
+            </mesh>
+          ))}
+        </group>
+
+        {/* Chrome Exhaust Tailpipe (Right Side Under Bumper) */}
+        <mesh position={[0.62, -0.34, 0.02]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.032, 0.032, 0.12, 16]} />
+          <meshStandardMaterial color="#e2e8f0" metalness={0.92} roughness={0.12} />
+        </mesh>
       </group>
 
-      {/* 6. Side View Mirrors & Amber Turn Indicator Repeaters */}
-      {[-0.92, 0.92].map((mx, idx) => (
-        <group key={`mirr-${idx}`} position={[mx, 0.82, -0.72]}>
-          {/* Silver Mirror Shell */}
+      {/* 9. Authentic C-Shaped Ruby Red Wraparound Taillamps */}
+      {[-0.71, 0.71].map((tx, idx) => (
+        <group key={`taillamp-${idx}`} position={[tx, 0.76, 1.86]}>
+          {/* Main Dark Ruby Housing */}
           <mesh castShadow>
-            <boxGeometry args={[0.18, 0.11, 0.16]} />
-            <meshStandardMaterial color="#cbd5e1" metalness={0.8} roughness={0.22} />
+            <boxGeometry args={[0.26, 0.36, 0.1]} />
+            <meshStandardMaterial color="#991b1b" roughness={0.18} metalness={0.1} />
           </mesh>
-          {/* Amber Turn Indicator on Mirror */}
-          <mesh position={[mx > 0 ? 0.09 : -0.09, 0, 0]}>
-            <boxGeometry args={[0.01, 0.03, 0.12]} />
-            <meshStandardMaterial color="#f59e0b" roughness={0.2} />
+          {/* Outer Red LED Perimeter C-Shape */}
+          <mesh position={[tx > 0 ? 0.04 : -0.04, 0, 0.045]}>
+            <boxGeometry args={[0.14, 0.32, 0.02]} />
+            <meshStandardMaterial color="#dc2626" roughness={0.12} />
           </mesh>
-          {/* Black Mounting Stem */}
-          <mesh position={[-mx * 0.06, -0.04, 0]}>
-            <boxGeometry args={[0.06, 0.04, 0.06]} />
-            <meshStandardMaterial color="#1e242b" />
+          {/* Clear Crystal Reverse & Amber Turn Indicator Band */}
+          <mesh position={[tx > 0 ? -0.03 : 0.03, -0.04, 0.048]}>
+            <boxGeometry args={[0.14, 0.1, 0.018]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.08} metalness={0.4} />
+          </mesh>
+          <mesh position={[tx > 0 ? -0.03 : 0.03, -0.04, 0.052]}>
+            <boxGeometry args={[0.11, 0.04, 0.012]} />
+            <meshStandardMaterial color="#f59e0b" roughness={0.15} />
+          </mesh>
+          {/* Side Wraparound Quarter-Panel Extension */}
+          <mesh position={[tx > 0 ? 0.12 : -0.12, 0.02, -0.08]}>
+            <boxGeometry args={[0.025, 0.28, 0.18]} />
+            <meshStandardMaterial color="#b91c1c" roughness={0.18} />
           </mesh>
         </group>
       ))}
 
-      {/* 7. 4 Multi-Spoke Alloy Wheels with Rubber Tires & Ford Center Caps */}
+      {/* 10. Side Doors, Handles & Fuel Flap */}
+      {/* 4 Door Handles (Front Left/Right, Rear Left/Right) */}
       {[
-        { x: -0.84, z: -1.22 }, // Front Left
-        { x: 0.84, z: -1.22 },  // Front Right
-        { x: -0.84, z: 1.25 },   // Rear Left
-        { x: 0.84, z: 1.25 }    // Rear Right
-      ].map((wPos, idx) => (
-        <group key={`whl-${idx}`} position={[wPos.x, 0.28, wPos.z]}>
-          {/* Rubber Tire */}
-          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.3, 0.3, 0.22, 24]} />
-            <meshStandardMaterial color="#171717" roughness={0.92} />
+        { x: -0.875, z: -0.22 }, // Front Left
+        { x: 0.875, z: -0.22 },  // Front Right
+        { x: -0.875, z: 0.54 },   // Rear Left
+        { x: 0.875, z: 0.54 },    // Rear Right
+      ].map((handle, idx) => (
+        <group key={`handle-${idx}`} position={[handle.x, 0.74, handle.z]}>
+          {/* Recessed Handle Pocket */}
+          <mesh>
+            <boxGeometry args={[0.015, 0.04, 0.14]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.7} roughness={0.4} />
           </mesh>
-          {/* Gunmetal / Silver Multi-Spoke Alloy Rim */}
+          {/* Pull Handle Grip Bar */}
+          <mesh position={[handle.x > 0 ? 0.018 : -0.018, 0, 0]} castShadow>
+            <boxGeometry args={[0.02, 0.025, 0.12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+          </mesh>
+        </group>
+      ))}
+      {/* Fuel Filler Flap on Left Rear Quarter Panel */}
+      <mesh position={[-0.872, 0.78, 1.1]}>
+        <cylinderGeometry args={[0.065, 0.065, 0.01, 16]} />
+        <meshStandardMaterial color="#b5c4d3" metalness={0.8} roughness={0.25} />
+      </mesh>
+
+      {/* 11. Sleek Aerodynamic Side Mirrors with Amber LED Repeaters */}
+      {[-0.94, 0.94].map((mx, idx) => (
+        <group key={`mirror-${idx}`} position={[mx, 0.86, -0.52]}>
+          {/* Body-Colored Upper Mirror Housing */}
+          <mesh castShadow>
+            <boxGeometry args={[0.18, 0.11, 0.15]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.82} roughness={0.2} />
+          </mesh>
+          {/* Black Lower Protective Half */}
+          <mesh position={[0, -0.04, 0]}>
+            <boxGeometry args={[0.17, 0.04, 0.14]} />
+            <meshStandardMaterial color="#1a2026" roughness={0.9} />
+          </mesh>
+          {/* Amber LED Side Turn Indicator Strip on Outer Edge */}
+          <mesh position={[mx > 0 ? 0.092 : -0.092, -0.01, 0.01]}>
+            <boxGeometry args={[0.012, 0.022, 0.12]} />
+            <meshStandardMaterial color="#f59e0b" roughness={0.15} />
+          </mesh>
+          {/* Reflective Mirror Glass (Facing Inward/Rearward) */}
+          <mesh position={[0, 0, 0.076]}>
+            <planeGeometry args={[0.15, 0.09]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.05} />
+          </mesh>
+          {/* Mounting Stalk to A-Pillar */}
+          <mesh position={[-mx * 0.06, -0.05, -0.02]}>
+            <boxGeometry args={[0.07, 0.04, 0.06]} />
+            <meshStandardMaterial color="#1a2026" roughness={0.95} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* 12. 4 Detailed Freestyle Titanium+ Multi-Spoke Alloy Wheels */}
+      {[
+        { x: -0.85, z: -1.22, name: 'FL' },
+        { x: 0.85, z: -1.22, name: 'FR' },
+        { x: -0.85, z: 1.25, name: 'RL' },
+        { x: 0.85, z: 1.25, name: 'RR' },
+      ].map((wheel, idx) => (
+        <group key={`wheel-${idx}`} position={[wheel.x, 0.3, wheel.z]}>
+          {/* Rubber Tire with Tread Shoulder */}
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.3, 0.3, 0.22, 28]} />
+            <meshStandardMaterial color="#1a1a1c" roughness={0.94} />
+          </mesh>
+
+          {/* Disc Brake Rotor Visible Behind Spokes */}
           <mesh
-            position={[wPos.x > 0 ? 0.04 : -0.04, 0, 0]}
+            position={[wheel.x > 0 ? -0.03 : 0.03, 0, 0]}
+            rotation={[0, 0, Math.PI / 2]}
+          >
+            <cylinderGeometry args={[0.18, 0.18, 0.03, 20]} />
+            <meshStandardMaterial color="#64748b" metalness={0.8} roughness={0.3} />
+          </mesh>
+          {/* Dark Brake Caliper */}
+          <mesh position={[wheel.x > 0 ? -0.03 : 0.03, 0.09, 0.04]}>
+            <boxGeometry args={[0.04, 0.08, 0.06]} />
+            <meshStandardMaterial color="#334155" metalness={0.6} roughness={0.4} />
+          </mesh>
+
+          {/* Machined Alloy Wheel Outer Rim Lip */}
+          <mesh
+            position={[wheel.x > 0 ? 0.06 : -0.06, 0, 0]}
             rotation={[0, 0, Math.PI / 2]}
             castShadow
           >
-            <cylinderGeometry args={[0.21, 0.21, 0.16, 16]} />
-            <meshStandardMaterial color="#e2e8f0" metalness={0.88} roughness={0.18} />
+            <cylinderGeometry args={[0.22, 0.22, 0.14, 24]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.92} roughness={0.14} />
           </mesh>
-          {/* Blue Ford Center Hubcap */}
-          <mesh
-            position={[wPos.x > 0 ? 0.12 : -0.12, 0, 0]}
-            rotation={[0, 0, Math.PI / 2]}
-          >
-            <cylinderGeometry args={[0.045, 0.045, 0.02, 12]} />
-            <meshStandardMaterial color="#1d4ed8" metalness={0.6} roughness={0.3} />
-          </mesh>
+
+          {/* 5-Split Multi-Spoke Alloy Face (10 Spoke Blades) */}
+          {[0, 1, 2, 3, 4].map((spokeIdx) => {
+            const angle = (spokeIdx * Math.PI * 2) / 5;
+            return (
+              <group
+                key={`spoke-${spokeIdx}`}
+                position={[wheel.x > 0 ? 0.125 : -0.125, 0, 0]}
+                rotation={[angle, 0, 0]}
+              >
+                {/* Dual Split Spokes */}
+                <mesh position={[0, 0.09, -0.016]}>
+                  <boxGeometry args={[0.02, 0.12, 0.02]} />
+                  <meshStandardMaterial color="#f1f5f9" metalness={0.9} roughness={0.15} />
+                </mesh>
+                <mesh position={[0, 0.09, 0.016]}>
+                  <boxGeometry args={[0.02, 0.12, 0.02]} />
+                  <meshStandardMaterial color="#f1f5f9" metalness={0.9} roughness={0.15} />
+                </mesh>
+              </group>
+            );
+          })}
+
+          {/* Blue Ford Oval Center Hubcap & 4 Lug Nuts */}
+          <group position={[wheel.x > 0 ? 0.132 : -0.132, 0, 0]}>
+            <mesh rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.045, 0.045, 0.018, 16]} />
+              <meshStandardMaterial color="#1d4ed8" metalness={0.7} roughness={0.25} />
+            </mesh>
+            {/* Lug Nuts */}
+            {[0, 1, 2, 3].map((lIdx) => {
+              const lAngle = (lIdx * Math.PI) / 2;
+              return (
+                <mesh
+                  key={`lug-${lIdx}`}
+                  position={[
+                    0,
+                    Math.cos(lAngle) * 0.026,
+                    Math.sin(lAngle) * 0.026,
+                  ]}
+                  rotation={[0, 0, Math.PI / 2]}
+                >
+                  <cylinderGeometry args={[0.005, 0.005, 0.022, 6]} />
+                  <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.1} />
+                </mesh>
+              );
+            })}
+          </group>
         </group>
       ))}
 
-      {/* 8. Soft Ambient Contact Shadow Under the Car */}
-      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[1.86, 3.95]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.35} />
-      </mesh>
+      {/* 13. Front Fascia, Signature Honeycomb Grille & Headlamps (Facing -Z) */}
+      <group position={[0, 0.46, -1.94]}>
+        {/* Front Bumper & Lower Air Dam */}
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.72, 0.38, 0.08]} />
+          <meshStandardMaterial color="#1a2026" roughness={0.92} />
+        </mesh>
+
+        {/* Signature Ford Hexagonal Black Honeycomb Grille */}
+        <mesh position={[0, 0.06, -0.02]} castShadow>
+          <boxGeometry args={[0.98, 0.28, 0.05]} />
+          <meshStandardMaterial color="#0b0f17" roughness={0.95} />
+        </mesh>
+        {/* Honeycomb Pattern Lattice Accent */}
+        <mesh position={[0, 0.06, -0.048]}>
+          <boxGeometry args={[0.94, 0.24, 0.008]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.9} />
+        </mesh>
+
+        {/* Blue Ford Oval Badge on Front Grille */}
+        <group position={[0, 0.08, -0.055]}>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.05, 0.05, 0.015, 16]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.9} roughness={0.2} />
+          </mesh>
+          <mesh position={[0, 0, -0.008]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.042, 0.042, 0.01, 16]} />
+            <meshStandardMaterial color="#1d4ed8" metalness={0.7} roughness={0.25} />
+          </mesh>
+        </group>
+
+        {/* Swept-Back Headlamps with Projector Lenses & LED Eyebrow */}
+        {[-0.64, 0.64].map((hx, idx) => (
+          <group key={`front-hl-${idx}`} position={[hx, 0.12, -0.01]}>
+            {/* Clear Polycarbonate Lens Housing */}
+            <mesh castShadow>
+              <boxGeometry args={[0.34, 0.18, 0.08]} />
+              <meshStandardMaterial color="#f8fafc" roughness={0.08} metalness={0.7} />
+            </mesh>
+            {/* Projector Lens Pupil */}
+            <mesh position={[hx > 0 ? 0.06 : -0.06, -0.01, -0.045]}>
+              <cylinderGeometry args={[0.04, 0.04, 0.02, 16]} />
+              <meshStandardMaterial color="#38bdf8" roughness={0.05} metalness={0.9} />
+            </mesh>
+            {/* LED Daytime Running Light (DRL) Top Strip */}
+            <mesh position={[0, 0.07, -0.042]}>
+              <boxGeometry args={[0.3, 0.018, 0.01]} />
+              <meshStandardMaterial color="#ffffff" roughness={0.1} />
+            </mesh>
+          </group>
+        ))}
+
+        {/* Front Fog Lamps in Black C-Shaped Bezels */}
+        {[-0.64, 0.64].map((fx, idx) => (
+          <group key={`front-fog-${idx}`} position={[fx, -0.1, -0.03]}>
+            <mesh>
+              <boxGeometry args={[0.18, 0.12, 0.02]} />
+              <meshStandardMaterial color="#0f141a" roughness={0.9} />
+            </mesh>
+            <mesh position={[0, 0, -0.012]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.035, 0.035, 0.015, 12]} />
+              <meshStandardMaterial color="#f8fafc" roughness={0.1} />
+            </mesh>
+          </group>
+        ))}
+
+        {/* Front Satin Silver Skid Plate */}
+        <mesh position={[0, -0.18, -0.025]} castShadow>
+          <boxGeometry args={[0.84, 0.09, 0.05]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.88} roughness={0.22} />
+        </mesh>
+      </group>
     </group>
   );
 }
